@@ -1,0 +1,417 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 1020" width="100%" height="100%">
+  <defs>
+    <!-- Background Gradient -->
+    <linearGradient id="mainBg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#070a13"/>
+      <stop offset="50%" stop-color="#0c1222"/>
+      <stop offset="100%" stop-color="#030712"/>
+    </linearGradient>
+
+    <!-- Card Background Gradient -->
+    <linearGradient id="cardBg" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#111827"/>
+      <stop offset="100%" stop-color="#0b0f19"/>
+    </linearGradient>
+
+    <!-- Grid Patterns -->
+    <pattern id="bigGrid" width="45" height="45" patternUnits="userSpaceOnUse">
+      <path d="M 45 0 L 0 0 0 45" fill="none" stroke="#1e293b" stroke-width="1.2"/>
+    </pattern>
+    <pattern id="miniGrid" width="22" height="22" patternUnits="userSpaceOnUse">
+      <path d="M 22 0 L 0 0 0 22" fill="none" stroke="#1e293b" stroke-width="1"/>
+    </pattern>
+
+    <!-- Glow Filters -->
+    <filter id="glowCyan" x="-20%" y="-20%" width="140%" height="140%">
+      <feGaussianBlur stdDeviation="3.5" result="blur" />
+      <feMerge>
+        <feMergeNode in="blur" />
+        <feMergeNode in="SourceGraphic" />
+      </feMerge>
+    </filter>
+    <filter id="glowBlue" x="-20%" y="-20%" width="140%" height="140%">
+      <feGaussianBlur stdDeviation="3.5" result="blur" />
+      <feMerge>
+        <feMergeNode in="blur" />
+        <feMergeNode in="SourceGraphic" />
+      </feMerge>
+    </filter>
+    <filter id="glowPurple" x="-20%" y="-20%" width="140%" height="140%">
+      <feGaussianBlur stdDeviation="3.5" result="blur" />
+      <feMerge>
+        <feMergeNode in="blur" />
+        <feMergeNode in="SourceGraphic" />
+      </feMerge>
+    </filter>
+    <filter id="glowAmber" x="-20%" y="-20%" width="140%" height="140%">
+      <feGaussianBlur stdDeviation="3.5" result="blur" />
+      <feMerge>
+        <feMergeNode in="blur" />
+        <feMergeNode in="SourceGraphic" />
+      </feMerge>
+    </filter>
+  </defs>
+
+  <!-- Canvas Background -->
+  <rect width="1440" height="1020" fill="url(#mainBg)"/>
+
+  <!-- ============================================================== -->
+  <!-- 1. HEADER SECTION -->
+  <!-- ============================================================== -->
+  <g transform="translate(60, 45)">
+    <rect x="0" y="0" width="1320" height="80" rx="10" fill="#0f172a" stroke="#1e293b" stroke-width="1.5"/>
+    <text x="30" y="38" fill="#38bdf8" font-family="'Inter', system-ui, sans-serif" font-size="22" font-weight="800" letter-spacing="-0.02em">
+      HEURISTIC GEOMETRIC PATHS &amp; VECTOR ANGLES (θ)
+    </text>
+    <text x="30" y="62" fill="#94a3b8" font-family="'Inter', system-ui, sans-serif" font-size="13">
+      Visual comparison of how each heuristic measures distance across a 2D discrete grid from Start (2, 8) to Goal (10, 2)
+    </text>
+    <rect x="1100" y="24" width="190" height="32" rx="6" fill="rgba(6, 182, 212, 0.15)" stroke="#06b6d4" stroke-width="1"/>
+    <text x="1195" y="45" fill="#22d3ee" font-family="'JetBrains Mono', monospace" font-size="12" font-weight="700" text-anchor="middle">
+      Grid Metric Master Guide
+    </text>
+  </g>
+
+  <!-- ============================================================== -->
+  <!-- 2. MASTER GEOMETRY & ANGLE DIAGRAM (TOP HALF) -->
+  <!-- ============================================================== -->
+  <g transform="translate(60, 145)">
+    <!-- Master Container Card -->
+    <rect width="1320" height="420" rx="12" fill="url(#cardBg)" stroke="#334155" stroke-width="1.5"/>
+
+    <!-- Left Sub-Panel: Large Interactive Grid Stage -->
+    <g transform="translate(30, 25)">
+      <!-- Grid Border -->
+      <rect width="585" height="360" rx="8" fill="#070a14" stroke="#1e293b" stroke-width="1.5"/>
+      <rect width="585" height="360" rx="8" fill="url(#bigGrid)"/>
+
+      <!-- Grid Axis Labels -->
+      <text x="15" y="340" fill="#64748b" font-family="'JetBrains Mono', monospace" font-size="11" font-weight="600">Y=0</text>
+      <text x="15" y="270" fill="#64748b" font-family="'JetBrains Mono', monospace" font-size="11" font-weight="600">Y=2</text>
+      <text x="15" y="60" fill="#64748b" font-family="'JetBrains Mono', monospace" font-size="11" font-weight="600">Y=8</text>
+      <text x="110" y="352" fill="#64748b" font-family="'JetBrains Mono', monospace" font-size="11" font-weight="600">X=2</text>
+      <text x="470" y="352" fill="#64748b" font-family="'JetBrains Mono', monospace" font-size="11" font-weight="600">X=10</text>
+
+      <!-- BASE TRIANGLE -->
+      <!-- Start S: (X=2, Y=8) -> Screen coords: (112, 60) -->
+      <!-- Goal G: (X=10, Y=2) -> Screen coords: (472, 330) -->
+      <!-- Delta X = 8 cells = 360px. Delta Y = 6 cells = 270px -->
+
+      <!-- Right-Angle Construction Guides (Dashed Gray) -->
+      <line x1="112" y1="60" x2="112" y2="330" stroke="#475569" stroke-width="2" stroke-dasharray="6,4"/>
+      <line x1="112" y1="330" x2="472" y2="330" stroke="#475569" stroke-width="2" stroke-dasharray="6,4"/>
+      <rect x="112" y="315" width="15" height="15" fill="none" stroke="#64748b" stroke-width="1.5"/>
+
+      <!-- Dimension Labels -->
+      <rect x="35" y="180" width="70" height="26" rx="4" fill="#0f172a" stroke="#64748b" stroke-width="1"/>
+      <text x="70" y="197" fill="#94a3b8" font-family="'JetBrains Mono', monospace" font-size="12" font-weight="700" text-anchor="middle">
+        Δy = 6
+      </text>
+
+      <rect x="257" y="338" width="70" height="26" rx="4" fill="#0f172a" stroke="#64748b" stroke-width="1"/>
+      <text x="292" y="355" fill="#94a3b8" font-family="'JetBrains Mono', monospace" font-size="12" font-weight="700" text-anchor="middle">
+        Δx = 8
+      </text>
+
+      <!-- Euclidean Direct Hypotenuse Laser Line (Blue) -->
+      <line x1="112" y1="60" x2="472" y2="330" stroke="#3b82f6" stroke-width="4.5" filter="url(#glowBlue)"/>
+
+      <!-- Angle Arc at Start S (60px radius) -->
+      <!-- Angle = atan2(270, 360) = 36.87 deg from vertical or horizontal. Measured from horizontal baseline: 36.87° -->
+      <path d="M 212 60 A 100 100 0 0 1 192 120" fill="none" stroke="#f59e0b" stroke-width="3" filter="url(#glowAmber)"/>
+      <rect x="220" y="80" width="105" height="26" rx="4" fill="#0f172a" stroke="#f59e0b" stroke-width="1.5"/>
+      <text x="272" y="97" fill="#fbbf24" font-family="'JetBrains Mono', monospace" font-size="12.5" font-weight="800" text-anchor="middle">
+        θ = 36.87°
+      </text>
+
+      <!-- Start Node (S) -->
+      <circle cx="112" cy="60" r="16" fill="#10b981" stroke="#ffffff" stroke-width="3" filter="url(#glowAmber)"/>
+      <text x="112" y="66" fill="#ffffff" font-family="'Inter', sans-serif" font-size="14" font-weight="800" text-anchor="middle">S</text>
+      <rect x="67" y="15" width="90" height="24" rx="4" fill="#064e3b" stroke="#10b981" stroke-width="1"/>
+      <text x="112" y="31" fill="#34d399" font-family="'JetBrains Mono', monospace" font-size="11" font-weight="700" text-anchor="middle">
+        Start (2, 8)
+      </text>
+
+      <!-- Goal Node (G) -->
+      <circle cx="472" cy="330" r="16" fill="#f43f5e" stroke="#ffffff" stroke-width="3" filter="url(#glowAmber)"/>
+      <text x="472" y="336" fill="#ffffff" font-family="'Inter', sans-serif" font-size="14" font-weight="800" text-anchor="middle">G</text>
+      <rect x="427" y="285" width="90" height="24" rx="4" fill="#4c0519" stroke="#f43f5e" stroke-width="1"/>
+      <text x="472" y="301" fill="#fb7185" font-family="'JetBrains Mono', monospace" font-size="11" font-weight="700" text-anchor="middle">
+        Goal (10, 2)
+      </text>
+    </g>
+
+    <!-- Right Sub-Panel: Mathematical Formula & Angle Derivation Box -->
+    <g transform="translate(645, 25)">
+      <rect width="645" height="360" rx="8" fill="#090d16" stroke="#1e293b" stroke-width="1.5"/>
+
+      <!-- Title -->
+      <text x="25" y="35" fill="#f8fafc" font-family="'Inter', sans-serif" font-size="18" font-weight="700">
+        Trigonometric Angle &amp; Vector Decomposition
+      </text>
+
+      <!-- Formula Pill 1: Displacement Vector -->
+      <g transform="translate(25, 55)">
+        <rect width="595" height="52" rx="6" fill="#111827" stroke="#334155" stroke-width="1"/>
+        <text x="20" y="24" fill="#94a3b8" font-family="'Inter', sans-serif" font-size="12" font-weight="600">Displacement Vector (d):</text>
+        <text x="20" y="42" fill="#38bdf8" font-family="'JetBrains Mono', monospace" font-size="14" font-weight="700">
+          Δx = |10 - 2| = 8 cells,    Δy = |2 - 8| = 6 cells
+        </text>
+      </g>
+
+      <!-- Formula Pill 2: The Angle Theta -->
+      <g transform="translate(25, 118)">
+        <rect width="595" height="65" rx="6" fill="rgba(245, 158, 11, 0.08)" stroke="#f59e0b" stroke-width="1.5"/>
+        <text x="20" y="24" fill="#fbbf24" font-family="'Inter', sans-serif" font-size="13" font-weight="700">
+          The Vector Heading Angle (θ):
+        </text>
+        <text x="20" y="48" fill="#ffffff" font-family="'JetBrains Mono', monospace" font-size="15" font-weight="700">
+          θ = arctan(Δy / Δx) = arctan(6 / 8) = arctan(0.75) = 36.87°
+        </text>
+      </g>
+
+      <!-- Key Insight Bullet Points -->
+      <g transform="translate(25, 200)">
+        <circle cx="8" cy="10" r="4" fill="#06b6d4"/>
+        <text x="24" y="14" fill="#e2e8f0" font-family="'Inter', sans-serif" font-size="13" font-weight="600">
+          Why Does the Angle Matter for Pathfinding?
+        </text>
+        <text x="24" y="36" fill="#94a3b8" font-family="'Inter', sans-serif" font-size="12" line-height="1.5">
+          • <tspan fill="#3b82f6" font-weight="700">Euclidean</tspan> assumes the robot can drive along angle θ = 36.87° continuously.
+        </text>
+        <text x="24" y="58" fill="#94a3b8" font-family="'Inter', sans-serif" font-size="12">
+          • <tspan fill="#06b6d4" font-weight="700">Manhattan</tspan> cannot cut across angle θ; it projects θ onto orthogonal 0° &amp; 90° axes.
+        </text>
+        <text x="24" y="80" fill="#94a3b8" font-family="'Inter', sans-serif" font-size="12">
+          • <tspan fill="#a855f7" font-weight="700">Chebyshev</tspan> cuts diagonally at 45° for 6 steps, then straight at 0° for 2 steps.
+        </text>
+        <text x="24" y="102" fill="#94a3b8" font-family="'Inter', sans-serif" font-size="12">
+          • <tspan fill="#64748b" font-weight="700">Dijkstra</tspan> has NO angle (θ is undefined/omnidirectional), wasting work in all directions.
+        </text>
+      </g>
+    </g>
+  </g>
+
+  <!-- ============================================================== -->
+  <!-- 3. BOTTOM HALF: 4 DEDICATED CARDS (NO CLUTTER!) -->
+  <!-- ============================================================== -->
+
+  <!-- CARD 1: MANHATTAN (L1) -->
+  <g transform="translate(60, 585)">
+    <rect width="315" height="340" rx="10" fill="url(#cardBg)" stroke="#06b6d4" stroke-width="2"/>
+    <rect x="0" y="0" width="315" height="42" rx="10" fill="rgba(6, 182, 212, 0.15)"/>
+    <text x="16" y="27" fill="#22d3ee" font-family="'Inter', sans-serif" font-size="15" font-weight="800">
+      1. Manhattan Distance (L1)
+    </text>
+
+    <!-- Mini-Grid (283 x 135) -->
+    <g transform="translate(16, 52)">
+      <rect width="283" height="135" rx="6" fill="#080c16" stroke="#1e293b" stroke-width="1"/>
+      <rect width="283" height="135" rx="6" fill="url(#miniGrid)"/>
+
+      <!-- Pure Orthogonal L-Shape Staircase -->
+      <path d="M 40 25 L 40 110 L 245 110" fill="none" stroke="#06b6d4" stroke-width="3" filter="url(#glowCyan)"/>
+      <!-- Stepped Staircase Alternative -->
+      <path d="M 40 25 L 75 25 L 75 60 L 140 60 L 140 85 L 200 85 L 200 110 L 245 110" fill="none" stroke="#22d3ee" stroke-width="1.8" stroke-dasharray="4,3"/>
+
+      <!-- S and G pins -->
+      <circle cx="40" cy="25" r="7" fill="#10b981"/>
+      <text x="40" y="16" fill="#10b981" font-family="'JetBrains Mono', monospace" font-size="10" font-weight="700" text-anchor="middle">S</text>
+      <circle cx="245" cy="110" r="7" fill="#f43f5e"/>
+      <text x="245" y="127" fill="#f43f5e" font-family="'JetBrains Mono', monospace" font-size="10" font-weight="700" text-anchor="middle">G</text>
+
+      <rect x="75" y="55" width="130" height="24" rx="4" fill="#0f172a" stroke="#06b6d4" stroke-width="1"/>
+      <text x="140" y="71" fill="#22d3ee" font-family="'JetBrains Mono', monospace" font-size="11" font-weight="800" text-anchor="middle">
+        8 + 6 = 14.0 steps
+      </text>
+    </g>
+
+    <!-- Text Specifications -->
+    <g transform="translate(16, 200)">
+      <text x="0" y="16" fill="#94a3b8" font-family="'Inter', sans-serif" font-size="12" font-weight="600">Trajectory Angle:</text>
+      <text x="0" y="34" fill="#22d3ee" font-family="'JetBrains Mono', monospace" font-size="13" font-weight="700">
+        0° (East) &amp; 90° (South)
+      </text>
+
+      <text x="0" y="60" fill="#94a3b8" font-family="'Inter', sans-serif" font-size="12" font-weight="600">Formula:</text>
+      <text x="0" y="78" fill="#e2e8f0" font-family="'JetBrains Mono', monospace" font-size="12.5" font-weight="700">
+        h = |Δx| + |Δy| = 8 + 6 = 14.0
+      </text>
+
+      <text x="0" y="104" fill="#94a3b8" font-family="'Inter', sans-serif" font-size="11.5">
+        • Exact distance for 4-way movement.
+      </text>
+      <text x="0" y="122" fill="#34d399" font-family="'Inter', sans-serif" font-size="11.5" font-weight="700">
+        • Result: Expands minimal 14 nodes!
+      </text>
+    </g>
+  </g>
+
+  <!-- CARD 2: EUCLIDEAN (L2) -->
+  <g transform="translate(395, 585)">
+    <rect width="315" height="340" rx="10" fill="url(#cardBg)" stroke="#3b82f6" stroke-width="2"/>
+    <rect x="0" y="0" width="315" height="42" rx="10" fill="rgba(59, 130, 246, 0.15)"/>
+    <text x="16" y="27" fill="#60a5fa" font-family="'Inter', sans-serif" font-size="15" font-weight="800">
+      2. Euclidean Distance (L2)
+    </text>
+
+    <!-- Mini-Grid (283 x 135) -->
+    <g transform="translate(16, 52)">
+      <rect width="283" height="135" rx="6" fill="#080c16" stroke="#1e293b" stroke-width="1"/>
+      <rect width="283" height="135" rx="6" fill="url(#miniGrid)"/>
+
+      <!-- Pure Straight Line Hypotenuse -->
+      <line x1="40" y1="25" x2="245" y2="110" stroke="#3b82f6" stroke-width="3.5" filter="url(#glowBlue)"/>
+
+      <!-- S and G pins -->
+      <circle cx="40" cy="25" r="7" fill="#10b981"/>
+      <text x="40" y="16" fill="#10b981" font-family="'JetBrains Mono', monospace" font-size="10" font-weight="700" text-anchor="middle">S</text>
+      <circle cx="245" cy="110" r="7" fill="#f43f5e"/>
+      <text x="245" y="127" fill="#f43f5e" font-family="'JetBrains Mono', monospace" font-size="10" font-weight="700" text-anchor="middle">G</text>
+
+      <rect x="65" y="55" width="150" height="24" rx="4" fill="#0f172a" stroke="#3b82f6" stroke-width="1"/>
+      <text x="140" y="71" fill="#60a5fa" font-family="'JetBrains Mono', monospace" font-size="11" font-weight="800" text-anchor="middle">
+        √(8² + 6²) = 10.0 steps
+      </text>
+    </g>
+
+    <!-- Text Specifications -->
+    <g transform="translate(16, 200)">
+      <text x="0" y="16" fill="#94a3b8" font-family="'Inter', sans-serif" font-size="12" font-weight="600">Trajectory Angle:</text>
+      <text x="0" y="34" fill="#60a5fa" font-family="'JetBrains Mono', monospace" font-size="13" font-weight="700">
+        θ = arctan(6/8) = 36.87°
+      </text>
+
+      <text x="0" y="60" fill="#94a3b8" font-family="'Inter', sans-serif" font-size="12" font-weight="600">Formula:</text>
+      <text x="0" y="78" fill="#e2e8f0" font-family="'JetBrains Mono', monospace" font-size="12.5" font-weight="700">
+        h = √(Δx² + Δy²) = √(100) = 10.0
+      </text>
+
+      <text x="0" y="104" fill="#94a3b8" font-family="'Inter', sans-serif" font-size="11.5">
+        • Straight line cuts across grid tiles.
+      </text>
+      <text x="0" y="122" fill="#fbbf24" font-family="'Inter', sans-serif" font-size="11.5" font-weight="700">
+        • Underestimates by 4 steps ⟹ 27 nodes.
+      </text>
+    </g>
+  </g>
+
+  <!-- CARD 3: CHEBYSHEV (L-INFINITY) -->
+  <g transform="translate(730, 585)">
+    <rect width="315" height="340" rx="10" fill="url(#cardBg)" stroke="#8b5cf6" stroke-width="2"/>
+    <rect x="0" y="0" width="315" height="42" rx="10" fill="rgba(139, 92, 246, 0.15)"/>
+    <text x="16" y="27" fill="#c084fc" font-family="'Inter', sans-serif" font-size="15" font-weight="800">
+      3. Chebyshev Distance (L∞)
+    </text>
+
+    <!-- Mini-Grid (283 x 135) -->
+    <g transform="translate(16, 52)">
+      <rect width="283" height="135" rx="6" fill="#080c16" stroke="#1e293b" stroke-width="1"/>
+      <rect width="283" height="135" rx="6" fill="url(#miniGrid)"/>
+
+      <!-- 45° Diagonal segment for 6 steps, then Horizontal for 2 steps -->
+      <line x1="40" y1="25" x2="190" y2="110" stroke="#8b5cf6" stroke-width="3" filter="url(#glowPurple)"/>
+      <line x1="190" y1="110" x2="245" y2="110" stroke="#8b5cf6" stroke-width="3" filter="url(#glowPurple)"/>
+
+      <!-- S and G pins -->
+      <circle cx="40" cy="25" r="7" fill="#10b981"/>
+      <text x="40" y="16" fill="#10b981" font-family="'JetBrains Mono', monospace" font-size="10" font-weight="700" text-anchor="middle">S</text>
+      <circle cx="245" cy="110" r="7" fill="#f43f5e"/>
+      <text x="245" y="127" fill="#f43f5e" font-family="'JetBrains Mono', monospace" font-size="10" font-weight="700" text-anchor="middle">G</text>
+
+      <rect x="65" y="55" width="150" height="24" rx="4" fill="#0f172a" stroke="#8b5cf6" stroke-width="1"/>
+      <text x="140" y="71" fill="#c084fc" font-family="'JetBrains Mono', monospace" font-size="11" font-weight="800" text-anchor="middle">
+        max(8, 6) = 8.0 steps
+      </text>
+    </g>
+
+    <!-- Text Specifications -->
+    <g transform="translate(16, 200)">
+      <text x="0" y="16" fill="#94a3b8" font-family="'Inter', sans-serif" font-size="12" font-weight="600">Trajectory Angle:</text>
+      <text x="0" y="34" fill="#c084fc" font-family="'JetBrains Mono', monospace" font-size="13" font-weight="700">
+        45° (Diag for 6) ➔ 0° (Horiz for 2)
+      </text>
+
+      <text x="0" y="60" fill="#94a3b8" font-family="'Inter', sans-serif" font-size="12" font-weight="600">Formula:</text>
+      <text x="0" y="78" fill="#e2e8f0" font-family="'JetBrains Mono', monospace" font-size="12.5" font-weight="700">
+        h = max(|Δx|, |Δy|) = max(8, 6) = 8.0
+      </text>
+
+      <text x="0" y="104" fill="#94a3b8" font-family="'Inter', sans-serif" font-size="11.5">
+        • Assumes diagonal movement cost = 1.0.
+      </text>
+      <text x="0" y="122" fill="#f43f5e" font-family="'Inter', sans-serif" font-size="11.5" font-weight="700">
+        • Severely loose lower bound ⟹ 30 nodes.
+      </text>
+    </g>
+  </g>
+
+  <!-- CARD 4: ZERO / DIJKSTRA -->
+  <g transform="translate(1065, 585)">
+    <rect width="315" height="340" rx="10" fill="url(#cardBg)" stroke="#64748b" stroke-width="2"/>
+    <rect x="0" y="0" width="315" height="42" rx="10" fill="rgba(100, 116, 139, 0.15)"/>
+    <text x="16" y="27" fill="#cbd5e1" font-family="'Inter', sans-serif" font-size="15" font-weight="800">
+      4. Zero (Dijkstra Baseline)
+    </text>
+
+    <!-- Mini-Grid (283 x 135) -->
+    <g transform="translate(16, 52)">
+      <rect width="283" height="135" rx="6" fill="#080c16" stroke="#1e293b" stroke-width="1"/>
+      <rect width="283" height="135" rx="6" fill="url(#miniGrid)"/>
+
+      <!-- Concentric Expanding Circular Waves -->
+      <circle cx="140" cy="68" r="25" fill="none" stroke="#64748b" stroke-width="1.8" stroke-dasharray="4,3"/>
+      <circle cx="140" cy="68" r="50" fill="none" stroke="#64748b" stroke-width="1.8" stroke-dasharray="4,3"/>
+      <circle cx="140" cy="68" r="75" fill="none" stroke="#64748b" stroke-width="1.8" stroke-dasharray="4,3"/>
+
+      <!-- S pin in Center -->
+      <circle cx="140" cy="68" r="8" fill="#10b981"/>
+      <text x="140" y="52" fill="#10b981" font-family="'JetBrains Mono', monospace" font-size="10" font-weight="700" text-anchor="middle">Start S</text>
+
+      <rect x="75" y="102" width="130" height="24" rx="4" fill="#0f172a" stroke="#64748b" stroke-width="1"/>
+      <text x="140" y="118" fill="#cbd5e1" font-family="'JetBrains Mono', monospace" font-size="11" font-weight="800" text-anchor="middle">
+        h = 0 (No Heuristic)
+      </text>
+    </g>
+
+    <!-- Text Specifications -->
+    <g transform="translate(16, 200)">
+      <text x="0" y="16" fill="#94a3b8" font-family="'Inter', sans-serif" font-size="12" font-weight="600">Trajectory Angle:</text>
+      <text x="0" y="34" fill="#cbd5e1" font-family="'JetBrains Mono', monospace" font-size="13" font-weight="700">
+        NO ANGLE (360° Omnidirectional)
+      </text>
+
+      <text x="0" y="60" fill="#94a3b8" font-family="'Inter', sans-serif" font-size="12" font-weight="600">Formula:</text>
+      <text x="0" y="78" fill="#e2e8f0" font-family="'JetBrains Mono', monospace" font-size="12.5" font-weight="700">
+        h = 0 ⟹ Priority f = g (Cost so far)
+      </text>
+
+      <text x="0" y="104" fill="#94a3b8" font-family="'Inter', sans-serif" font-size="11.5">
+        • Spreads like circular ripple in water.
+      </text>
+      <text x="0" y="122" fill="#f43f5e" font-family="'Inter', sans-serif" font-size="11.5" font-weight="700">
+        • Blind search expands 84 nodes!
+      </text>
+    </g>
+  </g>
+
+  <!-- ============================================================== -->
+  <!-- 4. BOTTOM DOMINANCE BAR -->
+  <!-- ============================================================== -->
+  <g transform="translate(60, 940)">
+    <rect width="1320" height="52" rx="8" fill="#0b0f19" stroke="#334155" stroke-width="1.5"/>
+    <text x="25" y="32" fill="#94a3b8" font-family="'Inter', sans-serif" font-size="13" font-weight="700">
+      Minkowski Inequality &amp; Expansion Chain:
+    </text>
+    <text x="320" y="33" fill="#cbd5e1" font-family="'JetBrains Mono', monospace" font-size="14" font-weight="700">
+      <tspan fill="#64748b">h_Dijkstra (0)</tspan> &lt; 
+      <tspan fill="#c084fc">h_Chebyshev (8)</tspan> &lt; 
+      <tspan fill="#60a5fa">h_Euclidean (10)</tspan> &lt; 
+      <tspan fill="#22d3ee">h_Manhattan (14)</tspan> = 
+      <tspan fill="#34d399">h* (14 Optimal Steps)</tspan>
+    </text>
+    <text x="1100" y="32" fill="#38bdf8" font-family="'Inter', sans-serif" font-size="12" font-weight="700">
+      Higher h ⟹ Fewer Nodes Expanded!
+    </text>
+  </g>
+</svg>

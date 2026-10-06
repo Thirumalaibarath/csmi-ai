@@ -1,0 +1,623 @@
+/* ==========================================================================
+   Visualizer Styles: Grid Canvas, Robot Tokens, Path Traces & Conflict Shockwaves
+   ========================================================================== */
+
+.visualizer-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background: radial-gradient(circle at 50% 30%, #0d1322 0%, #06080e 100%);
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--border-medium);
+  padding: 1.75rem 1.25rem;
+  position: relative;
+  overflow: hidden;
+  box-shadow: inset 0 0 60px rgba(0, 0, 0, 0.8), 0 10px 40px rgba(0, 0, 0, 0.5);
+  min-height: 540px;
+  perspective: 1200px;
+  perspective-origin: 50% 45%;
+}
+
+/* 3D Camera Controls Bar */
+.camera-controls-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  max-width: 640px;
+  background: rgba(16, 22, 35, 0.85);
+  backdrop-filter: blur(12px);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-md);
+  padding: 0.45rem 0.85rem;
+  margin-bottom: 1.25rem;
+  z-index: 30;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+}
+
+.camera-preset-group {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+}
+
+.camera-btn {
+  background: transparent;
+  border: 1px solid var(--border-subtle);
+  color: var(--text-secondary);
+  font-size: 0.75rem;
+  font-weight: 600;
+  padding: 0.3rem 0.65rem;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+}
+
+.camera-btn:hover {
+  background: rgba(255, 255, 255, 0.08);
+  color: var(--text-primary);
+}
+
+.camera-btn.active {
+  background: var(--accent-cyan);
+  color: #000000;
+  border-color: var(--accent-cyan);
+  box-shadow: 0 0 12px var(--accent-cyan-glow);
+}
+
+.camera-slider-group {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.72rem;
+  color: var(--text-muted);
+}
+
+.camera-slider-group input[type="range"] {
+  width: 80px;
+  height: 4px;
+}
+
+/* 3D Grid Wrapper & Stage */
+.grid-stage-3d {
+  position: relative;
+  display: inline-block;
+  transform-style: preserve-3d;
+  transition: transform 0.25s cubic-bezier(0.2, 0.8, 0.2, 1);
+  margin: 1.5rem auto;
+}
+
+.grid-stage-3d.orbiting {
+  animation: cameraOrbit 20s linear infinite alternate;
+}
+
+.grid-wrapper {
+  position: relative;
+  user-select: none;
+  touch-action: none;
+  display: inline-block;
+  border-radius: 8px;
+  transform-style: preserve-3d;
+  /* Thick 3D pedestal beneath the board */
+  box-shadow: 
+    0 1px 0 #1e293b,
+    0 4px 0 #182234,
+    0 8px 0 #121927,
+    0 12px 0 #0d121c,
+    0 18px 24px rgba(0, 0, 0, 0.9),
+    0 30px 60px rgba(0, 0, 0, 0.8),
+    0 0 50px rgba(6, 182, 212, 0.15);
+  border: 2px solid rgba(255, 255, 255, 0.15);
+}
+
+.grid-board {
+  display: grid;
+  background: #0b0f1a;
+  gap: 1.5px;
+  transform-style: preserve-3d;
+}
+
+/* Individual 3D Cell */
+.grid-cell {
+  position: relative;
+  background: #111726;
+  transition: all 0.18s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transform-style: preserve-3d;
+}
+
+.grid-cell:hover {
+  background: #1e2942;
+  z-index: 5;
+  box-shadow: inset 0 0 8px rgba(6, 182, 212, 0.4);
+}
+
+/* 3D Extruded Obstacle Monolith */
+.grid-cell.obstacle {
+  background: #1c2436 !important;
+  cursor: not-allowed;
+  transform-style: preserve-3d;
+  transform: translateZ(12px);
+  /* 3D block extrusion edges */
+  box-shadow: 
+    0 2px 0 #141b29,
+    0 4px 0 #0f1520,
+    0 8px 0 #0a0e17,
+    0 12px 14px rgba(0, 0, 0, 0.7),
+    inset 0 0 6px rgba(255, 255, 255, 0.1);
+  border-top: 1px solid rgba(255, 255, 255, 0.2);
+  border-left: 1px solid rgba(255, 255, 255, 0.15);
+  animation: obstacleRise 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.grid-cell.obstacle::after {
+  content: '';
+  position: absolute;
+  inset: 2px;
+  background: linear-gradient(135deg, #243048 0%, #161e2e 100%);
+  border-radius: 2px;
+  border: 1px solid rgba(6, 182, 212, 0.2);
+}
+
+/* Single Agent Search States in 3D */
+.grid-cell.visited {
+  background: rgba(139, 92, 246, 0.28);
+  box-shadow: inset 0 0 10px rgba(139, 92, 246, 0.5);
+  transform: translateZ(2px);
+  animation: visitedRipple 0.35s cubic-bezier(0, 0, 0.2, 1);
+}
+
+.grid-cell.open-set {
+  background: rgba(6, 182, 212, 0.3);
+  box-shadow: inset 0 0 8px rgba(6, 182, 212, 0.6), 0 0 12px rgba(6, 182, 212, 0.3);
+  transform: translateZ(3px);
+  animation: openPulse 1.2s infinite alternate;
+}
+
+.grid-cell.path-cell {
+  background: rgba(16, 185, 129, 0.45);
+  box-shadow: inset 0 0 12px rgba(16, 185, 129, 0.8), 0 0 15px rgba(16, 185, 129, 0.4);
+  transform: translateZ(4px);
+}
+
+/* 3D Start & Goal Holographic Beacons */
+.grid-cell.start-cell {
+  background: rgba(16, 185, 129, 0.45);
+  box-shadow: 0 0 20px rgba(16, 185, 129, 0.6);
+  z-index: 6;
+  transform: translateZ(6px);
+}
+
+.grid-cell.start-cell::before {
+  content: '';
+  position: absolute;
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: #10b981;
+  box-shadow: 0 0 15px #10b981;
+  transform: translateZ(12px);
+  animation: beaconPulse 1.6s infinite ease-out;
+}
+
+.grid-cell.goal-cell {
+  background: rgba(245, 158, 11, 0.45);
+  box-shadow: 0 0 20px rgba(245, 158, 11, 0.6);
+  z-index: 6;
+  transform: translateZ(6px);
+}
+
+.grid-cell.goal-cell::before {
+  content: '';
+  position: absolute;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  border: 2px dashed #f59e0b;
+  transform: translateZ(14px) rotateZ(0deg);
+  animation: goalRotate 4s linear infinite;
+  box-shadow: 0 0 15px #f59e0b;
+}
+
+/* 3D Autonomous Robot Drone */
+.robot-drone-3d {
+  position: absolute;
+  transform-style: preserve-3d;
+  transition: left var(--robot-duration, 0.25s) linear, top var(--robot-duration, 0.25s) linear;
+  pointer-events: none;
+  z-index: 25;
+}
+
+/* Cast Shadow on the Ground Plane (Z = 0) */
+.drone-ground-shadow {
+  position: absolute;
+  inset: 15%;
+  border-radius: 50%;
+  background: rgba(0, 0, 0, 0.75);
+  filter: blur(5px);
+  transform: translateZ(0px) scale(0.9);
+  transition: all 0.2s ease;
+}
+
+/* Floating Elevated Drone Body (Z = 22px) with Heading Rotation */
+.drone-body-3d {
+  position: absolute;
+  inset: 6%;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-heading);
+  font-weight: 800;
+  color: #ffffff;
+  transform: translateZ(22px) rotateZ(var(--robot-heading, 0deg));
+  transition: transform 0.22s ease-out;
+  box-shadow: 
+    0 4px 12px rgba(0, 0, 0, 0.8),
+    0 0 22px currentColor;
+  border: 2px solid #ffffff;
+  transform-style: preserve-3d;
+}
+
+.drone-body-3d::after {
+  content: '';
+  position: absolute;
+  inset: -5px;
+  border-radius: 50%;
+  border: 1px dashed currentColor;
+  opacity: 0.75;
+  animation: droneRotor 2.5s linear infinite;
+}
+
+/* Directional Heading Pointer */
+.drone-head-arrow {
+  position: absolute;
+  top: 2px;
+  width: 0;
+  height: 0;
+  border-left: 4px solid transparent;
+  border-right: 4px solid transparent;
+  border-bottom: 7px solid #ffffff;
+  filter: drop-shadow(0 0 5px #ffffff);
+}
+
+/* Traversed Path Trail behind Robot */
+.grid-cell.traversed-cell {
+  background: rgba(6, 182, 212, 0.6) !important;
+  box-shadow: inset 0 0 15px #06b6d4, 0 0 12px #06b6d4 !important;
+  transform: translateZ(5px);
+}
+
+/* Placement Mode Banner */
+.placement-mode-banner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  max-width: 640px;
+  padding: 0.5rem 0.85rem;
+  border-radius: var(--radius-md);
+  font-size: 0.8rem;
+  font-weight: 600;
+  margin-bottom: 0.85rem;
+  animation: fadeIn 0.2s ease;
+  z-index: 30;
+}
+
+.placement-mode-banner.start {
+  background: rgba(16, 185, 129, 0.18);
+  border: 1px solid rgba(16, 185, 129, 0.4);
+  color: #34d399;
+}
+
+.placement-mode-banner.goal {
+  background: rgba(245, 158, 11, 0.18);
+  border: 1px solid rgba(245, 158, 11, 0.4);
+  color: #fbbf24;
+}
+
+/* Vector Angle Inspector Box */
+.vector-inspector-card {
+  width: 100%;
+  background: var(--bg-secondary);
+  border-radius: var(--radius-md);
+  border: 1px solid var(--border-subtle);
+  padding: 0.85rem 1rem;
+  margin-top: 1rem;
+}
+
+/* 3D Collision Blast Marker */
+.collision-badge-3d {
+  position: absolute;
+  z-index: 35;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transform-style: preserve-3d;
+  transform: translateZ(28px);
+  pointer-events: auto;
+  cursor: pointer;
+}
+
+.collision-blast-ring {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: rgba(244, 63, 94, 0.4);
+  border: 2px solid #f43f5e;
+  box-shadow: 0 0 30px #f43f5e;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1rem;
+  color: #ffffff;
+  animation: blast3D 0.9s infinite alternate;
+}
+
+/* SVG Overlay for Paths */
+.path-svg-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 5;
+}
+
+.path-line {
+  fill: none;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-dasharray: 6 3;
+  animation: dashAnimation 1s linear infinite;
+}
+
+/* Conflict Alert Banner */
+.conflict-alert {
+  width: 100%;
+  background: rgba(244, 63, 94, 0.12);
+  border: 1px solid rgba(244, 63, 94, 0.35);
+  border-radius: var(--radius-md);
+  padding: 0.85rem 1.1rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  animation: fadeIn 0.3s ease;
+}
+
+.conflict-alert.success {
+  background: rgba(16, 185, 129, 0.12);
+  border-color: rgba(16, 185, 129, 0.35);
+}
+
+.conflict-info {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  font-size: 0.85rem;
+}
+
+/* Chart Canvas & SVG Styles */
+.chart-container {
+  width: 100%;
+  background: var(--bg-secondary);
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--border-subtle);
+  padding: 1.25rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.chart-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.bar-chart-wrap {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.bar-row {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+.bar-label-wrap {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--text-secondary);
+}
+
+.bar-track {
+  width: 100%;
+  height: 24px;
+  background: #141c2e;
+  border-radius: var(--radius-sm);
+  overflow: hidden;
+  position: relative;
+  border: 1px solid var(--border-subtle);
+}
+
+.bar-fill {
+  height: 100%;
+  border-radius: var(--radius-sm);
+  transition: width 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  padding-right: 0.6rem;
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: #ffffff;
+}
+
+/* Legend items */
+.legend-bar {
+  display: flex;
+  align-items: center;
+  gap: 1.25rem;
+  flex-wrap: wrap;
+  padding: 0.6rem 1rem;
+  background: var(--bg-secondary);
+  border-radius: var(--radius-md);
+  border: 1px solid var(--border-subtle);
+  font-size: 0.78rem;
+  color: var(--text-secondary);
+}
+
+.legend-item {
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+}
+
+.legend-color-dot {
+  width: 14px;
+  height: 14px;
+  border-radius: 3px;
+}
+
+/* Keyframe Animations */
+@keyframes visitedRipple {
+  0% {
+    transform: scale(0.3);
+    background: rgba(6, 182, 212, 0.8);
+    border-radius: 50%;
+  }
+  50% {
+    background: rgba(139, 92, 246, 0.6);
+  }
+  100% {
+    transform: scale(1);
+    background: rgba(139, 92, 246, 0.22);
+    border-radius: 0;
+  }
+}
+
+@keyframes openPulse {
+  0% {
+    background: rgba(6, 182, 212, 0.15);
+  }
+  100% {
+    background: rgba(6, 182, 212, 0.35);
+  }
+}
+
+@keyframes beaconPulse {
+  0% {
+    transform: scale(1);
+    opacity: 0.8;
+  }
+  100% {
+    transform: scale(1.6);
+    opacity: 0;
+  }
+}
+
+@keyframes shockwave {
+  0% {
+    transform: scale(1);
+    box-shadow: 0 0 10px #f43f5e;
+  }
+  100% {
+    transform: scale(1.25);
+    box-shadow: 0 0 25px #f43f5e;
+  }
+}
+
+@keyframes shake {
+  0%, 100% { transform: translate(0, 0); }
+  25% { transform: translate(-2px, 1px); }
+  75% { transform: translate(2px, -1px); }
+}
+
+@keyframes dashAnimation {
+  to {
+    stroke-dashoffset: -18;
+  }
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(-4px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* 3D Dynamic Animations */
+@keyframes droneHover {
+  0%, 100% {
+    transform: translateZ(22px) translateY(0px);
+  }
+  50% {
+    transform: translateZ(29px) translateY(-3px);
+  }
+}
+
+@keyframes droneRotor {
+  from {
+    transform: rotateZ(0deg);
+  }
+  to {
+    transform: rotateZ(360deg);
+  }
+}
+
+@keyframes obstacleRise {
+  from {
+    transform: translateZ(0px) scale(0.9);
+    opacity: 0.5;
+  }
+  to {
+    transform: translateZ(12px) scale(1);
+    opacity: 1;
+  }
+}
+
+@keyframes goalRotate {
+  from {
+    transform: translateZ(14px) rotateZ(0deg);
+  }
+  to {
+    transform: translateZ(14px) rotateZ(360deg);
+  }
+}
+
+@keyframes blast3D {
+  0% {
+    transform: scale(0.8) translateZ(18px);
+    box-shadow: 0 0 12px #f43f5e;
+  }
+  100% {
+    transform: scale(1.35) translateZ(40px);
+    box-shadow: 0 0 40px #f43f5e;
+  }
+}
+
+@keyframes cameraOrbit {
+  0% {
+    transform: rotateX(54deg) rotateZ(-45deg);
+  }
+  50% {
+    transform: rotateX(62deg) rotateZ(35deg);
+  }
+  100% {
+    transform: rotateX(54deg) rotateZ(-45deg);
+  }
+}
